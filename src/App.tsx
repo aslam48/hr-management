@@ -52,7 +52,7 @@ function App() {
   ];
 
   // Handle form input changes
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -61,7 +61,7 @@ function App() {
   };
 
   // Add new employee
-  const handleAddEmployee = (e) => {
+  const handleAddEmployee = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     
     const newEmployee = {
