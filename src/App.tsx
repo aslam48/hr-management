@@ -369,7 +369,7 @@ function App() {
 
 
           {/* list  */}
-          {
+          {/* {
             filteredEmployees.length > 0 ? (
               <div className='space-x-6'>
                 {filteredEmployees.map(employees => {
@@ -384,7 +384,7 @@ function App() {
                 })}
               </div>
             )
-          }
+          } */}
 
 
         </main>
