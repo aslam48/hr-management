@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Search, PlusCircle, Download, UserRoundSearch, UserRoundPlus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, PlusCircle, Download } from 'lucide-react';
 import { Employee } from './interface';
 
 function App() {
@@ -213,183 +213,299 @@ function App() {
 
 
   return (
-    <Fragment>
-      <div className=" pb-24 min-h-screen">
-        <header className="bg-gray-800 text-white shadow-md">
-          <div className="max-w-6xl mx-auto px-4 py-6">
-            <h1 className="text-3xl  capitalize font-bold">
-              Hr manager Tracker
-            </h1>
-            <p className="mt-2">A tool for tracking employee status</p>
-          </div>
-        </header>
-
-        <main className="max-w-6xl mx-auto px-4 py-6 ">
-          <div className="mb-8 flex flex-col  md:flex-row justify-between items-start gap-4">
-            <div className="flex-1 w-full ">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search employees"
-                  className="w-full pl-10 pr-4 py-2 border rounded outline-none"
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  value={filterStatus}
-                />
-                <UserRoundSearch
-                  size={20}
-                  className="absolute left-3 top-2.5 text-gray-400"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-4 w-full md:w-auto">
-              <select
-                className="border rounded px-3 py-2 bg-white"
-                onChange={() => {}}
-                value={`all`}
-              >
-                <option value="all">All Status</option>
-                <option value="active">Not Started </option>
-                <option value="active">In Progress</option>
-                <option value="active">Completed</option>
-              </select>
-
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
-              >
-                Add Employee
-                <UserRoundPlus size={20} />
-              </button>
+    <div className="min-h-screen bg-gray-100 pb-24">
+      <header className="bg-blue-700 text-white shadow">
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <h1 className="text-3xl font-bold">Employee Onboarding Tracker</h1>
+          <p className="mt-2">A lightweight tool for HR to track employee onboarding status</p>
+        </div>
+      </header>
+      
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* Control Panel */}
+        <div className="mb-8 flex flex-col md:flex-row justify-between items-start gap-4">
+          <div className="flex-1 w-full">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search employees..."
+                className="pl-10 pr-4 py-2 border rounded w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
             </div>
           </div>
-
-          {/* add employee  */}
-          {showAddForm && (
-          <div className="bg-white shadow-md rounded p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">Add new Employee</h2>
+          
+          <div className="flex gap-4 w-full md:w-auto">
+            <select 
+              className="border rounded px-3 py-2 bg-white"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="all">All Status</option>
+              <option value="not-started">Not Started</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            
+            <button 
+              onClick={() => setShowAddForm(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-700"
+            >
+              <PlusCircle size={18} />
+              <span>Add Employee</span>
+            </button>
+            
+            <button 
+              onClick={exportToCSV}
+              className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-green-700"
+            >
+              <Download size={18} />
+              <span>Export</span>
+            </button>
+          </div>
+        </div>
+        
+        {/* Add Employee Form */}
+        {showAddForm && (
+          <div className="bg-white rounded shadow-md p-6 mb-8">
+            <h2 className="text-xl font-semibold mb-4">Add New Employee</h2>
             <form onSubmit={handleAddEmployee}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1 text-gray-700 font-medium text-sm">
-                    Full Name
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name*
                   </label>
                   <input
                     type="text"
-                    placeholder="FullName"
-                    name="fullname"
+                    name="fullName"
                     required
-                    className="w-full border rounded px-3 py-2"
                     value={formData.fullName}
                     onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-
+                
                 <div>
-                  <label className="block mb-1 text-gray-700 font-medium text-sm">
-                    Email
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email*
                   </label>
                   <input
                     type="email"
-                    placeholder="email"
                     name="email"
                     required
-                    className="w-full border rounded px-3 py-2"
                     value={formData.email}
                     onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-
+                
                 <div>
-                  <label className="block mb-1 text-gray-700 font-medium text-sm">
-                    Job Role
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Job Role*
                   </label>
                   <input
                     type="text"
-                    placeholder="Job Role"
                     name="jobRole"
                     required
-                    className="w-full border rounded px-3 py-2"
                     value={formData.jobRole}
                     onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-
+                
                 <div>
-                  <label className="block mb-1 text-gray-700 font-medium text-sm">
-                    Departemnt
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Department*
                   </label>
                   <input
                     type="text"
-                    placeholder="Departemnt"
                     name="department"
                     required
-                    className="w-full border rounded px-3 py-2"
                     value={formData.department}
                     onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-
+                
                 <div>
-                  <label className="block mb-1 text-gray-700 font-medium text-sm">
-                    Job Role / Department
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Start Date (Optional)
                   </label>
                   <input
                     type="date"
-                    placeholder="startDate"
                     name="startDate"
-                    required
-                    className="w-full border rounded px-3 py-2"
                     value={formData.startDate}
                     onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
               </div>
-
+              
               <div className="mt-6 flex justify-end gap-3">
                 <button
-                  onClick={() => {}}
+                  type="button"
+                  onClick={() => setShowAddForm(false)}
+                  className="px-4 py-2 border rounded text-gray-700 hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+                <button
                   type="submit"
-                  className="bg-green-500 text-white px-4 py-2 rounded"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   Add Employee
-                </button>
-
-                <button
-                  onClick={() => {}}
-                  type="button"
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  cancel
                 </button>
               </div>
             </form>
           </div>
-          )}
-
-
-          {/* list  */}
-          {/* {
-            filteredEmployees.length > 0 ? (
-              <div className='space-x-6'>
-                {filteredEmployees.map(employees => {
-                  const progress = calculateProgress(employees);
-                  const statusColor = employees.fullyOnboarded ? "bg-green-500" : progress === 0 ? "bg-red-500" : "bg-yellow-500"
-
-                  return (
-                    <div>
-
+        )}
+        
+        {/* Employee List */}
+        {filteredEmployees.length > 0 ? (
+          <div className="space-y-6">
+            {filteredEmployees.map(employee => {
+              const progress = calculateProgress(employee);
+              const statusColor = 
+                employee.fullyOnboarded ? 'bg-green-500' :
+                progress === 0 ? 'bg-red-500' :
+                'bg-yellow-500';
+              
+              return (
+                <div key={employee.id} className="bg-white rounded shadow-md overflow-hidden">
+                  <div className="p-6">
+                    <div className="flex flex-col md:flex-row justify-between">
+                      <div>
+                        <h3 className="text-xl font-semibold">{employee.fullName}</h3>
+                        <div className="text-gray-600 mt-1">{employee.jobRole} | {employee.department}</div>
+                        <div className="text-gray-500 text-sm">{employee.email}</div>
+                        {employee.startDate && (
+                          <div className="text-gray-500 text-sm mt-1">Start Date: {employee.startDate}</div>
+                        )}
+                      </div>
+                      
+                      <div className="mt-4 md:mt-0 flex flex-col items-start md:items-end">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${statusColor}`}></div>
+                          <div className="font-medium">
+                            {employee.fullyOnboarded ? 'Fully Onboarded' : progress === 0 ? 'Not Started' : 'In Progress'}
+                          </div>
+                        </div>
+                        
+                        <div className="mt-2 w-full md:w-64">
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Progress</span>
+                            <span>{progress}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div 
+                              className={`h-2.5 rounded-full ${statusColor}`}
+                              style={{ width: `${progress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-3">
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={employee.fullyOnboarded}
+                              onChange={() => markAsFullyOnboarded(employee.id, !employee.fullyOnboarded)}
+                              className="rounded text-blue-600"
+                            />
+                            <span className="text-sm">Mark as Fully Onboarded</span>
+                          </label>
+                        </div>
+                      </div>
                     </div>
-                  )
-                })}
-              </div>
-            )
-          } */}
-
-
-        </main>
-      </div>
-    </Fragment>
+                    
+                    <div className="mt-6">
+                      <h4 className="font-medium mb-3">Onboarding Tasks</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {employee.tasks.map(task => (
+                          <div 
+                            key={task.id}
+                            className="flex items-center border rounded p-3 bg-gray-50"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={task.completed}
+                              onChange={() => toggleTaskCompletion(employee.id, task.id)}
+                              className="rounded text-blue-600"
+                            />
+                            <span className={`ml-3 ${task.completed ? 'line-through text-gray-500' : ''}`}>
+                              {task.name}
+                            </span>
+                          </div>
+                        ))}
+                        
+                        {employee.customTasks.map(task => (
+                          <div 
+                            key={task.id}
+                            className="flex items-center border rounded p-3 bg-blue-50"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={task.completed}
+                              onChange={() => toggleTaskCompletion(employee.id, task.id, true)}
+                              className="rounded text-blue-600"
+                            />
+                            <span className={`ml-3 ${task.completed ? 'line-through text-gray-500' : ''}`}>
+                              {task.name}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4">
+                      <div className="border-t pt-4">
+                        <h4 className="font-medium mb-2">Add Custom Task</h4>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="Enter task name"
+                            className="border rounded px-3 py-2 flex-1"
+                            id={`custom-task-${employee.id}`}
+                          />
+                          <button
+                            onClick={() => {
+                              const input = document.getElementById(`custom-task-${employee.id}`) as HTMLInputElement;
+                              if (input) {
+                                addCustomTask(employee.id, input.value);
+                                input.value = '';
+                              }
+                            }}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                          >
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="bg-white rounded shadow-md p-12 text-center">
+            <p className="text-gray-500 text-lg">
+              {employees.length === 0
+                ? "No employees added yet. Add your first employee to get started."
+                : "No employees match your search criteria."}
+            </p>
+          </div>
+        )}
+      </main>
+      
+      <footer className="bg-gray-800 text-white py-6 fixed bottom-0 w-full">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p>Employee Onboarding Tracker | A lightweight HR management tool</p>
+        </div>
+      </footer>
+    </div>
   );
 }
 
